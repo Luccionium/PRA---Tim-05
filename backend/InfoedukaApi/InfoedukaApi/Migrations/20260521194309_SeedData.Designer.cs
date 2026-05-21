@@ -4,6 +4,7 @@ using InfoedukaApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfoedukaApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260521194309_SeedData")]
+    partial class SeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,20 +44,6 @@ namespace InfoedukaApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Kolegiji");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Naziv = "Projektni Razvoj Aplikacija",
-                            Opis = "Kolegij o razvoju aplikacija"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Naziv = "Baze Podataka",
-                            Opis = "Kolegij o bazama podataka"
-                        });
                 });
 
             modelBuilder.Entity("InfoedukaApi.Models.Korisnik", b =>
@@ -95,18 +84,9 @@ namespace InfoedukaApi.Migrations
                             Id = 1,
                             Email = "admin@infoeduka.hr",
                             Ime = "Admin",
-                            Lozinka = "$2a$11$1pyL3mPQImM3.nF5m9eyl.buUnI4g65QO/ySfbNRMQ9E6r2XpfkKe",
+                            Lozinka = "$2a$11$F4lxURzCnzyJZbn2siTeBuk74km890i9N3CF./CC4f1KQ6C0eE0au",
                             Prezime = "Admin",
                             Tip = "Admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Email = "ivan@infoeduka.hr",
-                            Ime = "Ivan",
-                            Lozinka = "$2a$11$oYERp7IfqIS3gb/bti4uqei8zeaNm/KQcZ3FCciuYxuzldwGNoftK",
-                            Prezime = "Ivić",
-                            Tip = "Predavac"
                         });
                 });
 
@@ -160,13 +140,6 @@ namespace InfoedukaApi.Migrations
                     b.HasIndex("PredavaciId");
 
                     b.ToTable("KolegijPredavac", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            KolegijiId = 1,
-                            PredavaciId = 2
-                        });
                 });
 
             modelBuilder.Entity("InfoedukaApi.Models.Obavijest", b =>

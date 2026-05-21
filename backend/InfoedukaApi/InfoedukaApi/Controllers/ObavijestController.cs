@@ -2,6 +2,7 @@
 using InfoedukaApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace InfoedukaApi.Controllers
 {
@@ -46,7 +47,7 @@ namespace InfoedukaApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Obavijest obavijest)
         {
-            var tip = User.FindFirst("tip")?.Value;
+            var tip = User.FindFirst(ClaimTypes.Role)?.Value;
             var idClaim = User.FindFirst("id")?.Value;
 
             // Predavac može dodati obavijest samo za svoj kolegij
@@ -71,7 +72,7 @@ namespace InfoedukaApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, Obavijest obavijest)
         {
-            var tip = User.FindFirst("tip")?.Value;
+            var tip = User.FindFirst(ClaimTypes.Role)?.Value;
             var idClaim = User.FindFirst("id")?.Value;
 
             // Predavac može urediti samo svoju obavijest
@@ -100,7 +101,7 @@ namespace InfoedukaApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var tip = User.FindFirst("tip")?.Value;
+            var tip = User.FindFirst(ClaimTypes.Role)?.Value;
             var idClaim = User.FindFirst("id")?.Value;
 
             // Predavac može brisati samo svoju obavijest
