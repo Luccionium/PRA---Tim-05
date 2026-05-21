@@ -21,7 +21,7 @@ namespace InfoedukaApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var tip = User.FindFirst("tip")?.Value;
+            var tip = User.FindFirst(ClaimTypes.Role)?.Value;
             var idClaim = User.FindFirst("id")?.Value;
 
             if (tip == "Predavac" && idClaim != null)
