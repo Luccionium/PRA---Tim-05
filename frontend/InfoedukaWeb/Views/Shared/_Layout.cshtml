@@ -4,47 +4,60 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Infoeduka</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
-            <div class="container">
-                <a class="navbar-brand" asp-controller="Kolegij" asp-action="Index">Infoeduka</a>
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    <div class="navbar-collapse">
-                        <ul class="navbar-nav me-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Kolegij" asp-action="Index">Kolegiji</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Obavijest" asp-action="Index">Obavijesti</a>
-                            </li>
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Korisnik" asp-action="Index">Predavači</a>
-                                </li>
-                            }
-                        </ul>
-                        <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-outline-light btn-sm">Odjava</button>
-                        </form>
-                    </div>
-                }
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-4">
-            @RenderBody()
-        </main>
+    <nav class="ie-navbar">
+        <div class="container ie-navbar__container">
+            <a class="ie-navbar__brand" asp-controller="Kolegij" asp-action="Index">
+                <span class="ie-navbar__brand-ie">Info</span><span class="ie-navbar__brand-eduka">eduka</span>
+            </a>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                var _ctrl = ViewContext.RouteData.Values["controller"]?.ToString();
+                <div class="ie-navbar__links">
+                    <a class="ie-navbar__link @(_ctrl == "Kolegij" ? "active" : "")" asp-controller="Kolegij" asp-action="Index">Kolegiji</a>
+                    <a class="ie-navbar__link @(_ctrl == "Obavijest" ? "active" : "")" asp-controller="Obavijest" asp-action="Index">Obavijesti</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="ie-navbar__link @(_ctrl == "Korisnik" ? "active" : "")" asp-controller="Korisnik" asp-action="Index">Predavači</a>
+                    }
+                </div>
+                <div class="ie-navbar__right">
+                    <span class="ie-navbar__user">@User.Identity.Name</span>
+                    <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
+                        <button type="submit" class="ie-btn-logout">Odjava</button>
+                    </form>
+                </div>
+            }
+        </div>
+    </nav>
+    <div class="ie-main">
+        <div class="container py-4">
+            <main role="main">
+                @RenderBody()
+            </main>
+        </div>
     </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @if (TempData["Toast"] is string toastMsg)
+    {
+        <div id="ie-toast" class="ie-toast">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="ie-toast__icon"><polyline points="20 6 9 17 4 12"/></svg>
+            @toastMsg
+        </div>
+        <script>
+          setTimeout(function () {
+            var t = document.getElementById('ie-toast');
+            if (t) t.classList.add('ie-toast--hide');
+          }, 3000);
+        </script>
+    }
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -18,10 +18,15 @@ public class ObavijestController : Controller
         return View(obavijesti);
     }
 
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> Create(int? kolegijId = null)
     {
         var kolegiji = await _api.GetKolegijiAsync();
-        return View(new ObavijestFormViewModel { Kolegiji = kolegiji });
+        return View(new ObavijestFormViewModel
+        {
+            Kolegiji = kolegiji,
+            KolegijId = kolegijId ?? 0,
+            ReturnKolegijId = kolegijId
+        });
     }
 
     [HttpPost]
@@ -33,10 +38,13 @@ public class ObavijestController : Controller
             return View(model);
         }
         await _api.CreateObavijestAsync(model.Naziv, model.Opis, model.DatumObjave, model.DatumIsteka, model.KolegijId);
+        TempData["Toast"] = "Obavijest je dodana.";
+        if (model.ReturnKolegijId.HasValue)
+            return RedirectToAction("Details", "Kolegij", new { id = model.ReturnKolegijId.Value });
         return RedirectToAction(nameof(Index));
     }
 
-    public async Task<IActionResult> Edit(int id)
+    public async Task<IActionResult> Edit(int id, int? returnKolegijId = null)
     {
         var o = await _api.GetObavijestAsync(id);
         if (o == null) return NotFound();
@@ -49,6 +57,7 @@ public class ObavijestController : Controller
             DatumObjave = o.DatumObjave,
             DatumIsteka = o.DatumIsteka,
             KolegijId = o.KolegijId,
+            ReturnKolegijId = returnKolegijId,
             Kolegiji = kolegiji
         });
     }
@@ -62,13 +71,18 @@ public class ObavijestController : Controller
             return View(model);
         }
         await _api.UpdateObavijestAsync(model.Id, model.Naziv, model.Opis, model.DatumObjave, model.DatumIsteka, model.KolegijId);
+        if (model.ReturnKolegijId.HasValue)
+            return RedirectToAction("Details", "Kolegij", new { id = model.ReturnKolegijId.Value });
         return RedirectToAction(nameof(Index));
     }
 
     [HttpPost]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int id, int? returnKolegijId = null)
     {
         await _api.DeleteObavijestAsync(id);
+        TempData["Toast"] = "Obavijest je obrisana.";
+        if (returnKolegijId.HasValue)
+            return RedirectToAction("Details", "Kolegij", new { id = returnKolegijId.Value });
         return RedirectToAction(nameof(Index));
     }
 }
