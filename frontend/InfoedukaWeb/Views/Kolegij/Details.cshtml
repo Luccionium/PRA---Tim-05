@@ -1,0 +1,92 @@
+@model InfoedukaWeb.Models.KolegijDetailsViewModel
+@{ ViewData["Title"] = Model.Kolegij.Naziv; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>@Model.Kolegij.Naziv</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary">Natrag</a>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Kolegij.Opis))
+{
+    <p class="text-muted mb-4">@Model.Kolegij.Opis</p>
+}
+
+<div class="row g-4">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>Predavači</strong>
+            </div>
+            <ul class="list-group list-group-flush">
+                @if (!Model.Kolegij.Predavaci.Any())
+                {
+                    <li class="list-group-item text-muted">Nema predavača.</li>
+                }
+                @foreach (var p in Model.Kolegij.Predavaci)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        @p.Ime @p.Prezime
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <form asp-action="RemovePredavac" method="post" class="d-inline"
+                                  onsubmit="return confirm('Ukloniti predavača?')">
+                                <input type="hidden" name="kolegijId" value="@Model.Kolegij.Id" />
+                                <input type="hidden" name="predavacId" value="@p.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Ukloni</button>
+                            </form>
+                        }
+                    </li>
+                }
+            </ul>
+            @if (User.IsInRole("Admin") && Model.SviPredavaci.Any())
+            {
+                <div class="card-footer">
+                    <form asp-action="AddPredavac" method="post" class="d-flex gap-2">
+                        <input type="hidden" name="kolegijId" value="@Model.Kolegij.Id" />
+                        <select name="predavacId" class="form-select form-select-sm">
+                            @foreach (var p in Model.SviPredavaci.Where(p => !Model.Kolegij.Predavaci.Any(e => e.Id == p.Id)))
+                            {
+                                <option value="@p.Id">@p.Ime @p.Prezime</option>
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary">Dodaj</button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>Obavijesti</strong>
+                <a asp-controller="Obavijest" asp-action="Create" class="btn btn-sm btn-primary">Nova</a>
+            </div>
+            <ul class="list-group list-group-flush">
+                @if (!Model.Obavijesti.Any())
+                {
+                    <li class="list-group-item text-muted">Nema obavijesti.</li>
+                }
+                @foreach (var o in Model.Obavijesti.OrderByDescending(o => o.DatumObjave))
+                {
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <strong>@o.Naziv</strong>
+                            <small class="text-muted">@o.DatumObjave.ToString("dd.MM.yyyy")</small>
+                        </div>
+                        <div class="text-muted small">@o.Opis</div>
+                        <div class="mt-1">
+                            <a asp-controller="Obavijest" asp-action="Edit" asp-route-id="@o.Id"
+                               class="btn btn-sm btn-outline-primary">Uredi</a>
+                            <form asp-controller="Obavijest" asp-action="Delete" asp-route-id="@o.Id"
+                                  method="post" class="d-inline ms-1"
+                                  onsubmit="return confirm('Obrisati obavijest?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Obriši</button>
+                            </form>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+@model List<InfoedukaWeb.Models.KorisnikViewModel>
+@{ ViewData["Title"] = "Predavači"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Predavači</h2>
+    <a asp-action="Create" class="btn btn-primary">Dodaj predavača</a>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Nema korisnika.</p>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Ime i prezime</th>
+                <th>Email</th>
+                <th>Tip</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var k in Model)
+            {
+                <tr>
+                    <td>@k.Ime @k.Prezime</td>
+                    <td>@k.Email</td>
+                    <td>@k.Tip</td>
+                    <td class="text-end">
+                        <a asp-action="Edit" asp-route-id="@k.Id" class="btn btn-sm btn-outline-primary">Uredi</a>
+                        <form asp-action="Delete" asp-route-id="@k.Id" method="post" class="d-inline ms-1"
+                              onsubmit="return confirm('Obrisati korisnika @k.Ime @k.Prezime?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Obriši</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
