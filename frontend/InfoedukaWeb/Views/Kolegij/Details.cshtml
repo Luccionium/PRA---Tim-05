@@ -1,7 +1,7 @@
 @model InfoedukaWeb.Models.KolegijDetailsViewModel
 @{ ViewData["Title"] = Model.Kolegij.Naziv; }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="ie-page-header">
     <h2>@Model.Kolegij.Naziv</h2>
     <a asp-action="Index" class="btn btn-outline-secondary">Natrag</a>
 </div>
@@ -60,7 +60,8 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <strong>Obavijesti</strong>
-                <a asp-controller="Obavijest" asp-action="Create" class="btn btn-sm btn-primary">Nova</a>
+                <a asp-controller="Obavijest" asp-action="Create"
+                   asp-route-kolegijId="@Model.Kolegij.Id" class="btn btn-sm btn-primary">Nova</a>
             </div>
             <ul class="list-group list-group-flush">
                 @if (!Model.Obavijesti.Any())
@@ -70,17 +71,24 @@
                 @foreach (var o in Model.Obavijesti.OrderByDescending(o => o.DatumObjave))
                 {
                     <li class="list-group-item">
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between align-items-center">
                             <strong>@o.Naziv</strong>
-                            <small class="text-muted">@o.DatumObjave.ToString("dd.MM.yyyy")</small>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="ie-badge @(o.DatumIsteka.Date < DateTime.Today ? "ie-badge-expired" : "ie-badge-active")">
+                                    @(o.DatumIsteka.Date < DateTime.Today ? "Istekla" : "Aktivna")
+                                </span>
+                                <small class="text-muted">@o.DatumObjave.ToString("dd.MM.yyyy")</small>
+                            </div>
                         </div>
                         <div class="text-muted small">@o.Opis</div>
                         <div class="mt-1">
                             <a asp-controller="Obavijest" asp-action="Edit" asp-route-id="@o.Id"
+                               asp-route-returnKolegijId="@Model.Kolegij.Id"
                                class="btn btn-sm btn-outline-primary">Uredi</a>
                             <form asp-controller="Obavijest" asp-action="Delete" asp-route-id="@o.Id"
                                   method="post" class="d-inline ms-1"
                                   onsubmit="return confirm('Obrisati obavijest?')">
+                                <input type="hidden" name="returnKolegijId" value="@Model.Kolegij.Id" />
                                 <button type="submit" class="btn btn-sm btn-outline-danger">Obriši</button>
                             </form>
                         </div>

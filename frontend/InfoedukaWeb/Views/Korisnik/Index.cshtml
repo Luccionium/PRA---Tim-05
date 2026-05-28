@@ -1,14 +1,19 @@
 @model List<InfoedukaWeb.Models.KorisnikViewModel>
 @{ ViewData["Title"] = "Predavači"; }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="ie-page-header">
     <h2>Predavači</h2>
     <a asp-action="Create" class="btn btn-primary">Dodaj predavača</a>
 </div>
 
 @if (!Model.Any())
 {
-    <p class="text-muted">Nema korisnika.</p>
+    <div class="ie-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <p>Nema korisnika.</p>
+    </div>
 }
 else
 {
@@ -27,7 +32,11 @@ else
                 <tr>
                     <td>@k.Ime @k.Prezime</td>
                     <td>@k.Email</td>
-                    <td>@k.Tip</td>
+                    <td>
+                        <span class="ie-badge @(k.Tip == "Admin" ? "ie-badge-admin" : "ie-badge-predavac")">
+                            @(k.Tip == "Admin" ? "Admin" : "Predavač")
+                        </span>
+                    </td>
                     <td class="text-end">
                         <a asp-action="Edit" asp-route-id="@k.Id" class="btn btn-sm btn-outline-primary">Uredi</a>
                         <form asp-action="Delete" asp-route-id="@k.Id" method="post" class="d-inline ms-1"

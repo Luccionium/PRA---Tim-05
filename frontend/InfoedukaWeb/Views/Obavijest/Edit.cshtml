@@ -1,12 +1,15 @@
 @model InfoedukaWeb.Models.ObavijestFormViewModel
 @{ ViewData["Title"] = "Uredi obavijest"; }
 
-<h2 class="mb-4">Uredi obavijest</h2>
+<div class="ie-page-header">
+    <h2>Uredi obavijest</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary">Natrag</a>
+</div>
 
-<div class="card" style="max-width:560px">
-    <div class="card-body">
+<div class="ie-form-card">
         <form asp-action="Edit" method="post">
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ReturnKolegijId" />
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
             <div class="mb-3">
                 <label asp-for="Naziv" class="form-label">Naziv</label>
@@ -36,5 +39,4 @@
             <button type="submit" class="btn btn-primary">Spremi</button>
             <a asp-action="Index" class="btn btn-outline-secondary ms-2">Odustani</a>
         </form>
-    </div>
 </div>

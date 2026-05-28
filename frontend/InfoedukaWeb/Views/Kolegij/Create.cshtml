@@ -1,10 +1,12 @@
 @model InfoedukaWeb.Models.KolegijFormViewModel
 @{ ViewData["Title"] = "Dodaj kolegij"; }
 
-<h2 class="mb-4">Dodaj kolegij</h2>
+<div class="ie-page-header">
+    <h2>Dodaj kolegij</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary">Natrag</a>
+</div>
 
-<div class="card" style="max-width:500px">
-    <div class="card-body">
+<div class="ie-form-card">
         <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
             <div class="mb-3">
@@ -40,5 +42,4 @@
             <button type="submit" class="btn btn-primary">Spremi</button>
             <a asp-action="Index" class="btn btn-outline-secondary ms-2">Odustani</a>
         </form>
-    </div>
 </div>

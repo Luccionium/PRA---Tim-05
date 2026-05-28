@@ -59,6 +59,7 @@ public class KolegijController : Controller
             foreach (var predavacId in model.SelectedPredavaciIds)
                 await _api.AddPredavacAsync(kolegij.Id, predavacId);
 
+        TempData["Toast"] = "Kolegij je dodan.";
         return RedirectToAction(nameof(Index));
     }
 
@@ -110,6 +111,7 @@ public class KolegijController : Controller
     public async Task<IActionResult> Delete(int id)
     {
         await _api.DeleteKolegijAsync(id);
+        TempData["Toast"] = "Kolegij je obrisan.";
         return RedirectToAction(nameof(Index));
     }
 

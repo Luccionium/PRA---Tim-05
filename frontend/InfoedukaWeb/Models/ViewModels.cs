@@ -72,5 +72,6 @@ public class ObavijestFormViewModel
     public DateTime DatumIsteka { get; set; } = DateTime.Today.AddDays(7);
     [Range(1, int.MaxValue, ErrorMessage = "Odaberite kolegij.")]
     public int KolegijId { get; set; }
+    public int? ReturnKolegijId { get; set; }
     public List<KolegijViewModel> Kolegiji { get; set; } = new();
 }

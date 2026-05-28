@@ -7,32 +7,141 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Prijava - Infoeduka</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #F97316; --orange-dark: #D96210;
+            --pink: #E9408E; --gradient: linear-gradient(135deg,#F97316 0%,#E9408E 100%);
+            --bg: #fff9f8; --border: #ecdfe8;
+            --muted: #8b8799; --text: #1e1929; --danger: #dc2626;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            font-family: 'Source Sans 3', system-ui, sans-serif;
+            background-color: var(--bg);
+            background-image: radial-gradient(var(--border) 1.5px, transparent 1.5px);
+            background-size: 28px 28px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 1.5rem;
+        }
+        .login-wrap { width: 100%; max-width: 400px; }
+        .login-header { text-align: center; margin-bottom: 2rem; }
+        .login-header__title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+            margin: 0 0 .5rem;
+        }
+        .login-header__title .gold { color: var(--orange); }
+        .login-header__title .ink  { color: var(--pink); }
+        .login-header__sub {
+            color: var(--muted);
+            font-size: .8rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin: 0;
+        }
+        .login-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--orange);
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(233,64,142,.14);
+            padding: 2.25rem 2rem;
+        }
+        .form-group { margin-bottom: 1.1rem; }
+        label {
+            display: block;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .07em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: .3rem;
+        }
+        input[type="email"], input[type="password"] {
+            display: block;
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: 'Source Sans 3', system-ui, sans-serif;
+            font-size: .95rem;
+            color: var(--text);
+            padding: .6rem .85rem;
+            background: #fff;
+            transition: border-color .15s, box-shadow .15s;
+        }
+        input:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(249,115,22,.15);
+            outline: none;
+        }
+        .btn-login {
+            display: block;
+            width: 100%;
+            background: var(--gradient);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Source Sans 3', system-ui, sans-serif;
+            font-size: .85rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            padding: .75rem;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: opacity .15s;
+        }
+        .btn-login:hover { opacity: .88; }
+        .text-danger { color: var(--danger); font-size: .8rem; display: block; margin-top: .2rem; }
+        .alert-danger {
+            background: #fff0f0;
+            border: 1px solid #fcc;
+            border-radius: 6px;
+            padding: .65rem .9rem;
+            font-size: .875rem;
+            color: var(--danger);
+            margin-bottom: 1rem;
+        }
+        .alert-danger:empty { display: none; }
+    </style>
 </head>
-<body class="bg-light">
-    <div class="container d-flex justify-content-center align-items-center" style="min-height:100vh">
-        <div class="card shadow-sm" style="width:380px">
-            <div class="card-body p-4">
-                <h4 class="card-title mb-4 text-center">Infoeduka</h4>
-                <form asp-action="Login" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-                    <div class="mb-3">
-                        <label asp-for="Email" class="form-label">Email</label>
-                        <input asp-for="Email" class="form-control" type="email" autocomplete="username" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="Lozinka" class="form-label">Lozinka</label>
-                        <input asp-for="Lozinka" class="form-control" type="password" autocomplete="current-password" />
-                        <span asp-validation-for="Lozinka" class="text-danger"></span>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Prijava</button>
-                </form>
-            </div>
+<body>
+    <div class="login-wrap">
+        <div class="login-header">
+            <h1 class="login-header__title">
+                <span class="gold">Info</span><span class="ink">eduka</span>
+            </h1>
+            <p class="login-header__sub">Prijava u sustav</p>
+        </div>
+        <div class="login-card">
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" type="email" autocomplete="username" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Lozinka">Lozinka</label>
+                    <input asp-for="Lozinka" type="password" autocomplete="current-password" />
+                    <span asp-validation-for="Lozinka" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn-login">Prijava</button>
+            </form>
         </div>
     </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
 </body>
 </html>
