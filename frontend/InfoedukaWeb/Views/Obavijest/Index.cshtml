@@ -45,7 +45,7 @@ else
                     <td class="text-end">
                         <a asp-action="Edit" asp-route-id="@o.Id" class="btn btn-sm btn-outline-primary">Uredi</a>
                         <form asp-action="Delete" asp-route-id="@o.Id" method="post" class="d-inline ms-1"
-                              onsubmit="return confirm('Obrisati obavijest?')">
+                              data-confirm="Obrisati obavijest @o.Naziv?">
                             <button type="submit" class="btn btn-sm btn-outline-danger">Obriši</button>
                         </form>
                     </td>

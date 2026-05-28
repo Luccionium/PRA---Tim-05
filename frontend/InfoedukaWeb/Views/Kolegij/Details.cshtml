@@ -29,7 +29,7 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <form asp-action="RemovePredavac" method="post" class="d-inline"
-                                  onsubmit="return confirm('Ukloniti predavača?')">
+                                  data-confirm="Ukloniti predavača @p.Ime @p.Prezime?">
                                 <input type="hidden" name="kolegijId" value="@Model.Kolegij.Id" />
                                 <input type="hidden" name="predavacId" value="@p.Id" />
                                 <button type="submit" class="btn btn-sm btn-outline-danger">Ukloni</button>
@@ -84,10 +84,10 @@
                         <div class="mt-1">
                             <a asp-controller="Obavijest" asp-action="Edit" asp-route-id="@o.Id"
                                asp-route-returnKolegijId="@Model.Kolegij.Id"
-                               class="btn btn-sm btn-outline-primary">Uredi</a>
+                               class="btn btn-sm btn-outline-primary ms-1">Uredi</a>
                             <form asp-controller="Obavijest" asp-action="Delete" asp-route-id="@o.Id"
                                   method="post" class="d-inline ms-1"
-                                  onsubmit="return confirm('Obrisati obavijest?')">
+                                  data-confirm="Obrisati obavijest @o.Naziv?">
                                 <input type="hidden" name="returnKolegijId" value="@Model.Kolegij.Id" />
                                 <button type="submit" class="btn btn-sm btn-outline-danger">Obriši</button>
                             </form>

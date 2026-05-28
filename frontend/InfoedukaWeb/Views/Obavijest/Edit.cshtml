@@ -3,7 +3,14 @@
 
 <div class="ie-page-header">
     <h2>Uredi obavijest</h2>
-    <a asp-action="Index" class="btn btn-outline-secondary">Natrag</a>
+    @if (Model.ReturnKolegijId.HasValue)
+    {
+        <a asp-controller="Kolegij" asp-action="Details" asp-route-id="@Model.ReturnKolegijId" class="btn btn-outline-secondary">Natrag</a>
+    }
+    else
+    {
+        <a asp-action="Index" class="btn btn-outline-secondary">Natrag</a>
+    }
 </div>
 
 <div class="ie-form-card">
