@@ -1,0 +1,49 @@
+@model List<InfoedukaWeb.Models.KolegijViewModel>
+@{ ViewData["Title"] = "Kolegiji"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Kolegiji</h2>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-primary">Dodaj kolegij</a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Nema kolegija.</p>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Naziv</th>
+                <th>Opis</th>
+                <th>Predavači</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var k in Model)
+            {
+                <tr>
+                    <td>@k.Naziv</td>
+                    <td>@k.Opis</td>
+                    <td>@string.Join(", ", k.Predavaci.Select(p => $"{p.Ime} {p.Prezime}"))</td>
+                    <td class="text-end">
+                        <a asp-action="Details" asp-route-id="@k.Id" class="btn btn-sm btn-outline-secondary">Detalji</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@k.Id" class="btn btn-sm btn-outline-primary ms-1">Uredi</a>
+                            <form asp-action="Delete" asp-route-id="@k.Id" method="post" class="d-inline ms-1"
+                                  onsubmit="return confirm('Obrisati kolegij @k.Naziv?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Obriši</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

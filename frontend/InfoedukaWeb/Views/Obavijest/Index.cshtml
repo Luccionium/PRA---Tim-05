@@ -1,0 +1,46 @@
+@model List<InfoedukaWeb.Models.ObavijestViewModel>
+@{ ViewData["Title"] = "Obavijesti"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Obavijesti</h2>
+    <a asp-action="Create" class="btn btn-primary">Nova obavijest</a>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Nema obavijesti.</p>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Naziv</th>
+                <th>Kolegij</th>
+                <th>Datum objave</th>
+                <th>Datum isteka</th>
+                <th>Kreator</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var o in Model.OrderByDescending(o => o.DatumObjave))
+            {
+                <tr>
+                    <td>@o.Naziv</td>
+                    <td>@o.KolegijNaziv</td>
+                    <td>@o.DatumObjave.ToString("dd.MM.yyyy")</td>
+                    <td>@o.DatumIsteka.ToString("dd.MM.yyyy")</td>
+                    <td>@o.KreatorIme</td>
+                    <td class="text-end">
+                        <a asp-action="Edit" asp-route-id="@o.Id" class="btn btn-sm btn-outline-primary">Uredi</a>
+                        <form asp-action="Delete" asp-route-id="@o.Id" method="post" class="d-inline ms-1"
+                              onsubmit="return confirm('Obrisati obavijest?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Obriši</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

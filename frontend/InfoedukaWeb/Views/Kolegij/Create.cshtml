@@ -1,0 +1,44 @@
+@model InfoedukaWeb.Models.KolegijFormViewModel
+@{ ViewData["Title"] = "Dodaj kolegij"; }
+
+<h2 class="mb-4">Dodaj kolegij</h2>
+
+<div class="card" style="max-width:500px">
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div class="mb-3">
+                <label asp-for="Naziv" class="form-label">Naziv</label>
+                <input asp-for="Naziv" class="form-control" />
+                <span asp-validation-for="Naziv" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Opis" class="form-label">Opis</label>
+                <textarea asp-for="Opis" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Predavači <span class="text-danger">*</span></label>
+                @if (!Model.SviPredavaci.Any())
+                {
+                    <div class="text-muted small">Nema dostupnih predavača. Dodajte predavača prije kreiranja kolegija.</div>
+                }
+                else
+                {
+                    <div class="border rounded p-2">
+                        @foreach (var p in Model.SviPredavaci)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox"
+                                       name="SelectedPredavaciIds" value="@p.Id" id="pred_@p.Id" />
+                                <label class="form-check-label" for="pred_@p.Id">@p.Ime @p.Prezime</label>
+                            </div>
+                        }
+                    </div>
+                }
+                <span class="text-danger">@Html.ValidationMessage("SelectedPredavaciIds")</span>
+            </div>
+            <button type="submit" class="btn btn-primary">Spremi</button>
+            <a asp-action="Index" class="btn btn-outline-secondary ms-2">Odustani</a>
+        </form>
+    </div>
+</div>

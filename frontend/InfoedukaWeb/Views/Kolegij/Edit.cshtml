@@ -1,0 +1,39 @@
+@model InfoedukaWeb.Models.KolegijFormViewModel
+@{ ViewData["Title"] = "Uredi kolegij"; }
+
+<h2 class="mb-4">Uredi kolegij</h2>
+
+<div class="card" style="max-width:500px">
+    <div class="card-body">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div class="mb-3">
+                <label asp-for="Naziv" class="form-label">Naziv</label>
+                <input asp-for="Naziv" class="form-control" />
+                <span asp-validation-for="Naziv" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Opis" class="form-label">Opis</label>
+                <textarea asp-for="Opis" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Predavači <span class="text-danger">*</span></label>
+                <div class="border rounded p-2">
+                    @foreach (var p in Model.SviPredavaci)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                   name="SelectedPredavaciIds" value="@p.Id" id="pred_@p.Id"
+                                   @(Model.SelectedPredavaciIds.Contains(p.Id) ? "checked" : "") />
+                            <label class="form-check-label" for="pred_@p.Id">@p.Ime @p.Prezime</label>
+                        </div>
+                    }
+                </div>
+                <span class="text-danger">@Html.ValidationMessage("SelectedPredavaciIds")</span>
+            </div>
+            <button type="submit" class="btn btn-primary">Spremi</button>
+            <a asp-action="Index" class="btn btn-outline-secondary ms-2">Odustani</a>
+        </form>
+    </div>
+</div>
