@@ -27,8 +27,8 @@ public class KorisnikController : Controller
     public async Task<IActionResult> Create(KorisnikFormViewModel model)
     {
         if (!ModelState.IsValid) return View(model);
-        await _api.CreateKorisnikAsync(model.Ime, model.Prezime, model.Email, model.Lozinka, model.Tip);
-        TempData["Toast"] = "Korisnik je dodan.";
+        var ok = await _api.CreateKorisnikAsync(model.Ime, model.Prezime, model.Email, model.Lozinka, model.Tip);
+        TempData[ok ? "Toast" : "Error"] = ok ? "Korisnik je dodan." : "Greška pri dodavanju korisnika.";
         return RedirectToAction(nameof(Index));
     }
 
@@ -51,15 +51,16 @@ public class KorisnikController : Controller
     public async Task<IActionResult> Edit(KorisnikFormViewModel model)
     {
         if (!ModelState.IsValid) return View(model);
-        await _api.UpdateKorisnikAsync(model.Id, model.Ime, model.Prezime, model.Email, model.Lozinka, model.Tip);
+        var ok = await _api.UpdateKorisnikAsync(model.Id, model.Ime, model.Prezime, model.Email, model.Lozinka, model.Tip);
+        TempData[ok ? "Toast" : "Error"] = ok ? "Korisnik je ažuriran." : "Greška pri ažuriranju korisnika.";
         return RedirectToAction(nameof(Index));
     }
 
     [HttpPost("Delete/{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        await _api.DeleteKorisnikAsync(id);
-        TempData["Toast"] = "Korisnik je obrisan.";
+        var ok = await _api.DeleteKorisnikAsync(id);
+        TempData[ok ? "Toast" : "Error"] = ok ? "Korisnik je obrisan." : "Greška pri brisanju korisnika.";
         return RedirectToAction(nameof(Index));
     }
 }

@@ -55,9 +55,13 @@ public class KolegijController : Controller
         }
 
         var kolegij = await _api.CreateKolegijAsync(model.Naziv, model.Opis);
-        if (kolegij != null)
-            foreach (var predavacId in model.SelectedPredavaciIds)
-                await _api.AddPredavacAsync(kolegij.Id, predavacId);
+        if (kolegij == null)
+        {
+            TempData["Error"] = "Greška pri dodavanju kolegija. Pokušajte ponovo.";
+            return RedirectToAction(nameof(Index));
+        }
+        foreach (var predavacId in model.SelectedPredavaciIds)
+            await _api.AddPredavacAsync(kolegij.Id, predavacId);
 
         TempData["Toast"] = "Kolegij je dodan.";
         return RedirectToAction(nameof(Index));
@@ -104,14 +108,15 @@ public class KolegijController : Controller
         foreach (var predavacId in currentIds.Except(selectedIds))
             await _api.RemovePredavacAsync(model.Id, predavacId);
 
+        TempData["Toast"] = "Kolegij je ažuriran.";
         return RedirectToAction(nameof(Index));
     }
 
     [HttpPost, Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
-        await _api.DeleteKolegijAsync(id);
-        TempData["Toast"] = "Kolegij je obrisan.";
+        var ok = await _api.DeleteKolegijAsync(id);
+        TempData[ok ? "Toast" : "Error"] = ok ? "Kolegij je obrisan." : "Greška pri brisanju kolegija.";
         return RedirectToAction(nameof(Index));
     }
 

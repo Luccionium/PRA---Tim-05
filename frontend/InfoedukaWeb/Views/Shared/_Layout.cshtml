@@ -49,15 +49,48 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="ie-toast__icon"><polyline points="20 6 9 17 4 12"/></svg>
             @toastMsg
         </div>
-        <script>
-          setTimeout(function () {
-            var t = document.getElementById('ie-toast');
-            if (t) t.classList.add('ie-toast--hide');
-          }, 3000);
-        </script>
+        <script>setTimeout(function(){var t=document.getElementById('ie-toast');if(t)t.classList.add('ie-toast--hide');},3000);</script>
     }
+    @if (TempData["Error"] is string errMsg)
+    {
+        <div id="ie-toast-err" class="ie-toast ie-toast--error">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="ie-toast__icon"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            @errMsg
+        </div>
+        <script>setTimeout(function(){var t=document.getElementById('ie-toast-err');if(t)t.classList.add('ie-toast--hide');},5000);</script>
+    }
+    <div class="modal fade" id="ie-confirm-modal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" style="max-width:360px">
+        <div class="modal-content">
+          <div class="modal-body px-4 pt-4 pb-2">
+            <p id="ie-confirm-text" class="mb-0" style="font-size:.95rem"></p>
+          </div>
+          <div class="modal-footer border-0 px-4 pb-4 gap-2">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Odustani</button>
+            <button type="button" class="btn btn-danger btn-sm" id="ie-confirm-ok">Obriši</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      (function () {
+        var pending = null;
+        document.addEventListener('submit', function (e) {
+          var msg = e.target.getAttribute('data-confirm');
+          if (!msg) return;
+          e.preventDefault();
+          pending = e.target;
+          document.getElementById('ie-confirm-text').textContent = msg;
+          new bootstrap.Modal(document.getElementById('ie-confirm-modal')).show();
+        }, true);
+        document.getElementById('ie-confirm-ok').addEventListener('click', function () {
+          bootstrap.Modal.getInstance(document.getElementById('ie-confirm-modal')).hide();
+          if (pending) { pending.removeAttribute('data-confirm'); pending.requestSubmit(); pending = null; }
+        });
+      })();
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

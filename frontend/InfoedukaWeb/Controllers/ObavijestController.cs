@@ -37,8 +37,8 @@ public class ObavijestController : Controller
             model.Kolegiji = await _api.GetKolegijiAsync();
             return View(model);
         }
-        await _api.CreateObavijestAsync(model.Naziv, model.Opis, model.DatumObjave, model.DatumIsteka, model.KolegijId);
-        TempData["Toast"] = "Obavijest je dodana.";
+        var ok = await _api.CreateObavijestAsync(model.Naziv, model.Opis, model.DatumObjave, model.DatumIsteka, model.KolegijId);
+        TempData[ok ? "Toast" : "Error"] = ok ? "Obavijest je dodana." : "Greška pri dodavanju obavijesti.";
         if (model.ReturnKolegijId.HasValue)
             return RedirectToAction("Details", "Kolegij", new { id = model.ReturnKolegijId.Value });
         return RedirectToAction(nameof(Index));
@@ -70,7 +70,8 @@ public class ObavijestController : Controller
             model.Kolegiji = await _api.GetKolegijiAsync();
             return View(model);
         }
-        await _api.UpdateObavijestAsync(model.Id, model.Naziv, model.Opis, model.DatumObjave, model.DatumIsteka, model.KolegijId);
+        var ok = await _api.UpdateObavijestAsync(model.Id, model.Naziv, model.Opis, model.DatumObjave, model.DatumIsteka, model.KolegijId);
+        TempData[ok ? "Toast" : "Error"] = ok ? "Obavijest je ažurirana." : "Greška pri ažuriranju obavijesti.";
         if (model.ReturnKolegijId.HasValue)
             return RedirectToAction("Details", "Kolegij", new { id = model.ReturnKolegijId.Value });
         return RedirectToAction(nameof(Index));
@@ -79,8 +80,8 @@ public class ObavijestController : Controller
     [HttpPost]
     public async Task<IActionResult> Delete(int id, int? returnKolegijId = null)
     {
-        await _api.DeleteObavijestAsync(id);
-        TempData["Toast"] = "Obavijest je obrisana.";
+        var ok = await _api.DeleteObavijestAsync(id);
+        TempData[ok ? "Toast" : "Error"] = ok ? "Obavijest je obrisana." : "Greška pri brisanju obavijesti.";
         if (returnKolegijId.HasValue)
             return RedirectToAction("Details", "Kolegij", new { id = returnKolegijId.Value });
         return RedirectToAction(nameof(Index));
