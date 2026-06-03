@@ -86,7 +86,7 @@ h1, h2, h3, h4 {
   flex-shrink: 0;
 }
 .ie-navbar__user {
-  color: rgba(255,255,255,.65);
+  color: #fff;
   font-size: .8rem;
   max-width: 180px;
   overflow: hidden;

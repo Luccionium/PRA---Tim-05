@@ -15,6 +15,11 @@ public class ObavijestController : Controller
     public async Task<IActionResult> Index()
     {
         var obavijesti = await _api.GetObavijestiAsync();
+        if (User.IsInRole("Predavac"))
+        {
+            var kolegiji = await _api.GetKolegijiAsync();
+            ViewBag.MojiKolegijiIds = kolegiji.Select(k => k.Id).ToHashSet();
+        }
         return View(obavijesti);
     }
 

@@ -34,14 +34,11 @@ public class AuthController : Controller
 
         var claims = new List<Claim> { new("jwt", token) };
         foreach (var c in jwt.Claims)
-        {
-            if (c.Type == "role")
-                claims.Add(new Claim(ClaimTypes.Role, c.Value));
-            else if (c.Type == "email")
-                claims.Add(new Claim(ClaimTypes.Email, c.Value));
-            else
-                claims.Add(c);
-        }
+            claims.Add(c);
+
+        var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        if (email != null)
+            claims.Add(new Claim(ClaimTypes.Name, email));
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
