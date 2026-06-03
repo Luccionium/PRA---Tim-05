@@ -1,5 +1,8 @@
 @model List<InfoedukaWeb.Models.ObavijestViewModel>
-@{ ViewData["Title"] = "Obavijesti"; }
+@{
+    ViewData["Title"] = "Obavijesti";
+    var mojiKolegijiIds = ViewBag.MojiKolegijiIds as HashSet<int> ?? new HashSet<int>();
+}
 
 <div class="ie-page-header">
     <h2>Obavijesti</h2>
@@ -43,11 +46,14 @@ else
                     </td>
                     <td>@o.KreatorIme</td>
                     <td class="text-end">
-                        <a asp-action="Edit" asp-route-id="@o.Id" class="btn btn-sm btn-outline-primary">Uredi</a>
-                        <form asp-action="Delete" asp-route-id="@o.Id" method="post" class="d-inline ms-1"
-                              data-confirm="Obrisati obavijest @o.Naziv?">
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Obriši</button>
-                        </form>
+                        @if (User.IsInRole("Admin") || mojiKolegijiIds.Contains(o.KolegijId))
+                        {
+                            <a asp-action="Edit" asp-route-id="@o.Id" class="btn btn-sm btn-outline-primary">Uredi</a>
+                            <form asp-action="Delete" asp-route-id="@o.Id" method="post" class="d-inline ms-1"
+                                  data-confirm="Obrisati obavijest @o.Naziv?">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Obriši</button>
+                            </form>
+                        }
                     </td>
                 </tr>
             }

@@ -1,5 +1,10 @@
 @model InfoedukaWeb.Models.KolegijDetailsViewModel
-@{ ViewData["Title"] = Model.Kolegij.Naziv; }
+@{
+    ViewData["Title"] = Model.Kolegij.Naziv;
+    var userId = User.FindFirst("id")?.Value;
+    var mozeUredivatiObavijesti = User.IsInRole("Admin") ||
+        Model.Kolegij.Predavaci.Any(p => p.Id.ToString() == userId);
+}
 
 <div class="ie-page-header">
     <h2>@Model.Kolegij.Naziv</h2>
@@ -81,17 +86,20 @@
                             </div>
                         </div>
                         <div class="text-muted small">@o.Opis</div>
-                        <div class="mt-1">
-                            <a asp-controller="Obavijest" asp-action="Edit" asp-route-id="@o.Id"
-                               asp-route-returnKolegijId="@Model.Kolegij.Id"
-                               class="btn btn-sm btn-outline-primary ms-1">Uredi</a>
-                            <form asp-controller="Obavijest" asp-action="Delete" asp-route-id="@o.Id"
-                                  method="post" class="d-inline ms-1"
-                                  data-confirm="Obrisati obavijest @o.Naziv?">
-                                <input type="hidden" name="returnKolegijId" value="@Model.Kolegij.Id" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Obriši</button>
-                            </form>
-                        </div>
+                        @if (mozeUredivatiObavijesti)
+                        {
+                            <div class="mt-1">
+                                <a asp-controller="Obavijest" asp-action="Edit" asp-route-id="@o.Id"
+                                   asp-route-returnKolegijId="@Model.Kolegij.Id"
+                                   class="btn btn-sm btn-outline-primary ms-1">Uredi</a>
+                                <form asp-controller="Obavijest" asp-action="Delete" asp-route-id="@o.Id"
+                                      method="post" class="d-inline ms-1"
+                                      data-confirm="Obrisati obavijest @o.Naziv?">
+                                    <input type="hidden" name="returnKolegijId" value="@Model.Kolegij.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Obriši</button>
+                                </form>
+                            </div>
+                        }
                     </li>
                 }
             </ul>
